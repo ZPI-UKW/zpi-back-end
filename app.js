@@ -102,7 +102,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.DB_CONNECT)
+  .connect(process.env.DB_CONNECT, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => {
     app.listen(8080);
   })
