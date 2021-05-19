@@ -41,7 +41,7 @@ module.exports = {
     return { ...createUser._doc, _id: createUser._id.toString() };
   },
   //logowanie
-  login: async ({ email, password }) => {
+  login: async ({ email, password }, { res }) => {
     const user = await User.findOne({ email: email });
     if (!user) {
       const error = new Error('User not found');
@@ -62,13 +62,18 @@ module.exports = {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: '1h',
+        expiresIn: '6h',
       },
     );
 
+    res.cookie('jid', token, { httpOnly: true });
+
     return {
-      token: token,
       userId: user._id.toString(),
+      email: user.email,
+      name: user.name,
+      lastname: user.lastname,
+      phonenumber: user.phone,
     };
   },
 };
