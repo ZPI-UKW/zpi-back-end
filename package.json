@@ -1,15 +1,14 @@
 {
-  "name": "nodejs-complete-guide",
+  "name": "zpi-backend",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/udemy-course-nodejs-complete"
+    "url": "https://github.com/ZPI-UKW/zpi-back-end.git"
   },
   "author": "",
   "license": "ISC",
