@@ -102,10 +102,8 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    'mongodb+srv://studiesUser:r6MsmhxSbo5yRgPF@studies.f2jst.mongodb.net/zpi?retryWrites=true&w=majority',
-  )
-  .then((result) => {
+  .connect(process.env.DB_CONNECT)
+  .then(() => {
     app.listen(8080);
   })
   .catch((err) => console.log(err));

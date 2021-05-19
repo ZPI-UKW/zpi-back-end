@@ -60,7 +60,7 @@ module.exports = {
         userId: user._id.toString(),
         email: user.email,
       },
-      'uniwersytetkazimierzawielkiegowbydgoszczy',
+      process.env.JWT_SECRET,
       {
         expiresIn: '1h',
       },
