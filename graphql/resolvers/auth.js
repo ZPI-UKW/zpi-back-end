@@ -34,10 +34,10 @@ const createUser = async ({ userInput }) => {
     password: password,
     name: userInput.name,
     lastname: userInput.lastname,
-    phone: userInput.phone,
+    phone: userInput.phonenumber,
   });
   const createUser = await user.save();
-  return { ...createUser._doc, _id: createUser._id.toString() };
+  return { ...createUser._doc, phonenumber: createUser.phone, _id: createUser._id.toString() };
 };
 
 //login
