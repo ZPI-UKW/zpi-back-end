@@ -4,7 +4,7 @@ const category = async () => {
   try {
     const categories = await Category.find();
     return categories;
-  } catch {
+  } catch (e) {
     throw new Error(e.message || 'Unknown error occured');
   }
 };
