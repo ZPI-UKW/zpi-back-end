@@ -18,4 +18,9 @@ module.exports = {
         password: String!
         ${userData}
     }`,
+  AddedBy: `
+    type AddedBy {
+        _id: ID!
+        ${userData}
+  }`,
 };
