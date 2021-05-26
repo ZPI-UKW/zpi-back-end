@@ -110,5 +110,3 @@ mongoose
 //   filePath = path.join(__dirname, '..', filePath);
 //   fs.unlink(filePath, err => console.log(err));
 // };
-
-//r6MsmhxSbo5yRgPF
