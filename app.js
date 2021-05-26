@@ -1,15 +1,18 @@
-const path = require('path')
+require('dotenv').config();
+const path = require('path');
 //const fs = require('fs')
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 //const multer = require('multer')
-const { graphqlHTTP } = require('express-graphql')
+const { graphqlHTTP } = require('express-graphql');
 
-const graphqlSchema = require('./graphql/schema')
-const graphqlResolver = require('./graphql/resolvers')
-const auth = require('./middleware/auth')
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
+const auth = require('./middleware/auth');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const app = express();
 
@@ -40,21 +43,10 @@ const app = express();
 //   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 // );
 // app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if(req.method === 'OPTIONS') {
-    return res.sendStatus(200)
-  }
-  next();
-});
-
-app.use(auth)
+app.use(auth);
 
 // app.put('/add-image', (req, res, next) => {
 //   if(!req.isAuth){
@@ -79,21 +71,21 @@ app.use(
     schema: graphqlSchema,
     rootValue: graphqlResolver,
     graphiql: true,
-    formatError(err) {
-      if(!err.originalError) {
-        return err
+    customFormatErrorFn(err) {
+      if (!err.originalError) {
+        return err;
       }
-      const data = err.originalError.data
-      const message = err.message || 'error ocurred'
-      const code = err.originalError.code || 500
-      return { 
+      const data = err.originalError.data;
+      const message = err.message || 'error ocurred';
+      const code = err.originalError.code || 500;
+      return {
         message: message,
-        status: code, 
-        data: data
-      }
-    }
-  })
-)
+        status: code,
+        data: data,
+      };
+    },
+  }),
+);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -104,13 +96,11 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    'mongodb+srv://studiesUser:r6MsmhxSbo5yRgPF@studies.f2jst.mongodb.net/zpi?retryWrites=true&w=majority'
-  )
-  .then(result => {
+  .connect(process.env.DB_CONNECT, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => {
     app.listen(8080);
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 // const clearImage = filePath => {
 //   filePath = path.join(__dirname, '..', filePath);

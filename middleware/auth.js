@@ -1,23 +1,22 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
+  const token = req.cookies.jid;
+  if (!token) {
     req.isAuth = false;
-    return next()
+    return next();
   }
-  const token = authHeader.split(' ')[1];
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, 'uniwersytetkazimierzawielkiegowbydgoszczy');
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
     err.statusCode = 500;
     req.isAuth = false;
-    return next()
+    return next();
   }
   if (!decodedToken) {
-    req.isAuth = false
-    return next()
+    req.isAuth = false;
+    return next();
   }
   req.userId = decodedToken.userId;
   req.isAuth = true;
