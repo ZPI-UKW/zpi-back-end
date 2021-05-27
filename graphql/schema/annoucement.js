@@ -21,8 +21,6 @@ module.exports = {
     }`,
 
   AnnoucementInputData: `
-    ${AddedBy}
-
     input AnnoucementInputData {
         title: String
         description: String

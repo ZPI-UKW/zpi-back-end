@@ -10,6 +10,7 @@ module.exports = buildSchema(`
     ${Category}
     ${Annoucement}
     ${AnnoucementData}
+    ${AnnoucementInputData}
 
     type RootQuery {
         login(email: String!, password: String!): AuthData!
