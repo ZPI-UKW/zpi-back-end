@@ -21,6 +21,7 @@ module.exports = buildSchema(`
 
     type RootMutation {
         createUser(userInput: UserInputData): User!
+        createAnnoucement(annoucementData: AnnoucementInputData): Annoucement!
     }
     
     schema {
