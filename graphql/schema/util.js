@@ -12,14 +12,14 @@ module.exports = {
   `,
 
   annoucementData: `
-    id: ID
-    title: String
-    description: String
-    location: String
-    phone: String
-    email: String
-    images: [String]
-    costs: Costs
+    id: ID!
+    title: String!
+    description: String!
+    location: String!
+    phone: String!
+    email: String!
+    images: [String!]!
+    costs: Costs!
   `,
 
   costsData: `

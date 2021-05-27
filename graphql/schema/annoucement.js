@@ -21,6 +21,10 @@ module.exports = {
     }`,
 
   AnnoucementInputData: `
+    input costsInput {
+      ${costsData}
+    }
+
     input AnnoucementInputData {
         title: String
         description: String
@@ -28,9 +32,8 @@ module.exports = {
         phone: String
         email: String
         images: [String]
-        costs: Costs
-        category: Category
-        addedBy: AddedBy
+        costs: costsInput
+        category: ID!
     }`
 };
 
