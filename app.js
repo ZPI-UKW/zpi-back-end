@@ -96,7 +96,11 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.DB_CONNECT, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(process.env.DB_CONNECT, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  })
   .then(() => {
     app.listen(8080);
   })
@@ -106,5 +110,3 @@ mongoose
 //   filePath = path.join(__dirname, '..', filePath);
 //   fs.unlink(filePath, err => console.log(err));
 // };
-
-//r6MsmhxSbo5yRgPF
