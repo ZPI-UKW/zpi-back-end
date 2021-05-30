@@ -1,45 +1,26 @@
 const User = require('../../models/user');
 const _ = require('lodash');
 const { changeUserDateValidation } = require('../../validation/user.validation');
+const { CustomError } = require('../../util/error');
 
 const changeUserData = async (
   { userInput: { email, name, lastname, phonenumber } },
-  { isAuth, userId },
+  { isAuth, userId, next },
 ) => {
   try {
-    if (!isAuth && !userId) {
-      const error = new Error('Not authorized');
-      error.code = 401;
-      throw error;
-    }
-    const errors = changeUserDateValidation({ email, name, lastname, phonenumber });
-
-    if (errors.length > 0) {
-      const error = new Error('Validation failed');
-      error.data = errors;
-      error.code = 422;
-      throw error;
-    }
+    if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
     const user = await User.findOne({ _id: userId });
-
-    if (!user) {
-      const error = new Error('User not found');
-      error.code = 404;
-      throw error;
-    }
+    if (!user) throw new CustomError('User not found', 404);
 
     if (user.email !== email) {
       const existingUser = await User.findOne({ email });
-
-      if (existingUser) {
-        const error = new Error('Email exists');
-        error.code = 409;
-        throw error;
-      }
-
+      if (existingUser) throw new CustomError('Email exists', 409);
       user.email = email;
     }
+
+    const errors = changeUserDateValidation({ email, name, lastname, phonenumber });
+    if (errors.length > 0) throw new CustomError('Validation failed', 422, errors);
 
     user.name = name;
     user.lastname = lastname;
@@ -52,10 +33,7 @@ const changeUserData = async (
       phonenumber: updatedUser._doc.phone,
     };
   } catch (e) {
-    const error = new Error(e.message || 'Unknown error occured');
-    error.code = e.code || 500;
-    error.data = e.data || {};
-    throw error;
+    throw e;
   }
 };
 
