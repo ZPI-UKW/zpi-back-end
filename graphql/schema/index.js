@@ -1,31 +1,24 @@
 const { buildSchema } = require('graphql');
-const {
-  User,
-  AuthUser,
-  UserInputData,
-  ChangeUserInputData,
-  ChangeUserReturnData,
-} = require('./user');
+const { User, UserInputData, UserInputWithId, UserWithId } = require('./user');
 const { Category } = require('./category');
 
 module.exports = buildSchema(`
     ${User}
-    ${AuthUser}
+    ${UserWithId}
     ${UserInputData}
-    ${ChangeUserInputData}
+    ${UserInputWithId}
     ${Category}
-    ${ChangeUserReturnData}
 
     type RootQuery {
-        login(email: String!, password: String!): AuthData!
-        getUserData: AuthData!
+        login(email: String!, password: String!): UserWithId!
+        getUserData: UserWithId!
         category: [Category!]!
         getCategory(id: ID): Category!
     }
 
     type RootMutation {
         createUser(userInput: UserInputData): User!
-        changeUserData(userInput: ChangeUserInputData): ChangeUserReturnData!
+        changeUserData(userInput: UserInputWithId): UserWithId!
     }
     
     schema {

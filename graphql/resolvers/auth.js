@@ -69,7 +69,7 @@ const login = async ({ email, password }, { res }) => {
   res.cookie('jid', token, { httpOnly: true });
 
   return {
-    userId: user._id.toString(),
+    _id: user._id.toString(),
     email: user.email,
     name: user.name,
     lastname: user.lastname,
@@ -93,7 +93,7 @@ const getUserData = async (_, { isAuth, userId }) => {
   }
 
   return {
-    userId: userId,
+    _id: userId,
     email: user.email,
     name: user.name,
     lastname: user.lastname,
