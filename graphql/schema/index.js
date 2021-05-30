@@ -9,6 +9,10 @@ module.exports = buildSchema(`
     ${UserInputWithId}
     ${Category}
 
+    type Id {
+        _id: ID!
+    }
+
     type RootQuery {
         login(email: String!, password: String!): UserWithId!
         getUserData: UserWithId!
@@ -19,6 +23,7 @@ module.exports = buildSchema(`
     type RootMutation {
         createUser(userInput: UserInputData): User!
         changeUserData(userInput: UserInputWithId): UserWithId!
+        changePassword(currentPassword: String!, newPassword: String!): Id!
     }
     
     schema {
