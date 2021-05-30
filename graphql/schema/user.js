@@ -18,9 +18,19 @@ module.exports = {
         password: String!
         ${userData}
     }`,
+  ChangeUserReturnData: `
+    type ChangeUserReturnData {
+        _id: ID!
+        ${userData}
+    }`,
   AddedBy: `
     type AddedBy {
         _id: ID!
         ${userData}
   }`,
+  ChangeUserInputData: `
+    input ChangeUserInputData {
+       ${userData}
+    }
+  `,
 };
