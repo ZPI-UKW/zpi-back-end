@@ -15,6 +15,15 @@ const changeUserDateValidation = ({ email, name, lastname, phonenumber }) => {
   return errors;
 };
 
+const changePasswordValidation = ({ newPassword }) => {
+  const errors = [];
+  if (validator.isEmpty(newPassword) || !validator.isLength(newPassword, { min: 8 }))
+    errors.push({ message: 'Invalid password' });
+
+  return errors;
+};
+
 module.exports = {
   changeUserDateValidation,
+  changePasswordValidation,
 };
