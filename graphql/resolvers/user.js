@@ -1,5 +1,6 @@
 const User = require('../../models/user');
 const _ = require('lodash');
+const { changeUserDateValidation } = require('../../validation/user.validation');
 
 const changeUserData = async (
   { userInput: { email, name, lastname, phonenumber } },
@@ -9,6 +10,14 @@ const changeUserData = async (
     if (!isAuth && !userId) {
       const error = new Error('Not authorized');
       error.code = 401;
+      throw error;
+    }
+    const errors = changeUserDateValidation({ email, name, lastname, phonenumber });
+
+    if (errors.length > 0) {
+      const error = new Error('Validation failed');
+      error.data = errors;
+      error.code = 422;
       throw error;
     }
 
@@ -45,6 +54,7 @@ const changeUserData = async (
   } catch (e) {
     const error = new Error(e.message || 'Unknown error occured');
     error.code = e.code || 500;
+    error.data = e.data || {};
     throw error;
   }
 };
