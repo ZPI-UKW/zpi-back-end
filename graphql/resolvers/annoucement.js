@@ -37,7 +37,7 @@ const createAnnoucement = async ({ annoucementInput }) => {
 
     const category = await Category.findById(annoucementInput.category)
     if(!category) {
-        const error = new Error('Invalid user')
+        const error = new Error('Invalid category')
         error.code = 401;
         throw error; 
     }
