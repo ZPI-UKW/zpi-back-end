@@ -8,19 +8,18 @@ module.exports = {
         ${userData}
     }
     `,
-  AuthUser: `
-    type AuthData {
-        userId: ID!
-        ${userData}
+  UserWithId: `type UserWithId {
+      _id: ID!
+      ${userData}
     }`,
   UserInputData: `
     input UserInputData {
         password: String!
         ${userData}
     }`,
-  AddedBy: `
-    type AddedBy {
-        _id: ID!
-        ${userData}
-  }`,
+  UserInputWithId: `
+    input UserInputWithId {
+       ${userData}
+    }
+  `,
 };
