@@ -20,9 +20,9 @@ const annoucement = async () => {
   }
 };
 
-const createAnnoucement = async ({ annoucementInput }) => {
+const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   try {
-    if (!req.isAuth && !req.userId) {
+    if (!isAuth && !userId) {
       const error = new Error('Not authorized');
       error.code = 401;
       throw error;
