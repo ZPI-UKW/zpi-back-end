@@ -28,7 +28,7 @@ const createAnnoucement = async ({ annoucementInput }) => {
       throw error;
     }
 
-    const user = await User.findById()
+    const user = await User.findById(req.userId);
     if(!user) {
         const error = new Error('Invalid user')
         error.code = 401;
