@@ -26,14 +26,14 @@ module.exports = {
     }
 
     input AnnoucementInputData {
-        title: String
-        description: String
-        location: String
-        phone: String
-        email: String
+        title: String!
+        description: String!
+        location: String!
+        phone: String!
+        email: String!
         images: [String]
-        costs: costsInput
-        category: ID!
+        costs: costsInput!
+        category: ID!!
     }`
 };
 

@@ -22,7 +22,13 @@ const annoucement = async () => {
 
 const createAnnoucement = async ({ annoucementInput }) => {
   try {
-    const user = await User.findOne()
+    if (!req.isAuth && !req.userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
+
+    const user = await User.findById()
     if(!user) {
         const error = new Error('Invalid user')
         error.code = 401;
@@ -47,7 +53,6 @@ const createAnnoucement = async ({ annoucementInput }) => {
       categoryId: category,
       addedBy: user
     });
-    console.log(annoucement)
     const createAnnoucement = await annoucement.save();
     return { 
       ...createAnnoucement._doc, 
