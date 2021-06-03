@@ -10,9 +10,14 @@ const category = async () => {
   }
 };
 
-const getCategory = async ({ id }) => {
+const getCategory = async ({ id, englishName }) => {
   try {
-    const category = await Category.findOne({ _id: id });
+    if (!id && !englishName) throw new CustomError('Specify id or englishName');
+
+    let category;
+    if (id) category = await Category.findById(id);
+    else category = await Category.findOne({ englishName });
+
     if (!category) throw new CustomError('Category does not exist', 404);
     return category;
   } catch (e) {

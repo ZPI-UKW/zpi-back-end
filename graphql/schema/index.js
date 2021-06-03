@@ -17,7 +17,7 @@ module.exports = buildSchema(`
         login(email: String!, password: String!): UserWithId!
         getUserData: UserWithId!
         category: [Category!]!
-        getCategory(id: ID): Category!
+        getCategory(id: ID, englishName: String): Category!
     }
 
     type RootMutation {
