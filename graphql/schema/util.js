@@ -9,6 +9,7 @@ module.exports = {
   categoryData: `
     id: ID!
     name: String!
+    englishName: String!
   `,
 
   annoucementData: `

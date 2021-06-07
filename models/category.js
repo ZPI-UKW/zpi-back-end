@@ -8,6 +8,12 @@ const categorySchema = new Schema({
     unique: true,
     dropDups: true,
   },
+  englishName: {
+    type: String,
+    required: true,
+    unique: true,
+    dropDups: true,
+  },
 });
 
 module.exports = mongoose.model('Category', categorySchema);
