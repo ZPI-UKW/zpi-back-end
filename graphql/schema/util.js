@@ -28,4 +28,8 @@ module.exports = {
     week: Float!
     month: Float!
   `,
+
+  reservationData: `
+    id: ID!
+  `
 };

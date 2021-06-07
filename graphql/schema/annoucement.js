@@ -12,12 +12,10 @@ module.exports = {
       ${costsData}
     }
 
-    ${AddedBy}
-
     type AnnoucementData {          
       ${annoucementData}
         category: Category
-        addedBy: AddedBy
+        addedBy: UserWithId
     }`,
 
   AnnoucementInputData: `
@@ -33,7 +31,7 @@ module.exports = {
         email: String!
         images: [String]
         costs: costsInput!
-        category: ID!!
+        category: ID!
     }`
 };
 
