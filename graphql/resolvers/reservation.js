@@ -1,7 +1,7 @@
 const User = require('../../models/user');
 const Reservation = require('../../models/reservation');
 const Annoucement = require('../../models/annoucement');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const createReservation = async ({ reservationInput }, { isAuth, userId }) => {
   try {
@@ -25,8 +25,8 @@ const createReservation = async ({ reservationInput }, { isAuth, userId }) => {
         throw error; 
     }
 
-    const startAt = moment(reservationInput.startAt)
-    const endAt = moment(reservationInput.endAt)
+    const startAt = moment.utc(reservationInput.startAt)
+    const endAt = moment.utc(reservationInput.endAt)
 
     const reservations = await Reservation.find({
         annoucementId: annoucement
@@ -34,10 +34,8 @@ const createReservation = async ({ reservationInput }, { isAuth, userId }) => {
 
     let notFree = false
     await reservations.forEach(res => {
-        console.log("end: " + res.endAt)
-        console.log("start: " + startAt.toISOString())
         notFree = true
-        if(endAt < res.startAt || startAt > res.endAt) notFree = false
+        if(endAt < moment.utc(res.startAt) || startAt > moment.utc(res.endAt)) notFree = false
     })
     if(notFree) {
         const error = new Error('date already reserved')
