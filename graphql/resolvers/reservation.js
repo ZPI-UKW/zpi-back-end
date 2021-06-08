@@ -5,13 +5,13 @@ const moment = require('moment-timezone');
 
 const createReservation = async ({ reservationInput }, { isAuth, userId }) => {
   try {
-    // if (!isAuth && !userId) {
-    //   const error = new Error('Not authorized');
-    //   error.code = 401;
-    //   throw error;
-    // }
+    if (!isAuth && !userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
 
-    const user = await User.findOne();
+    const user = await User.findById(userId);
     if(!user) {
         const error = new Error('Invalid user')
         error.code = 401;
