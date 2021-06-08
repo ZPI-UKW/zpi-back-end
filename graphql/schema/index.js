@@ -23,6 +23,7 @@ module.exports = buildSchema(`
         getUserData: UserWithId!
         category: [Category!]!
         getCategory(id: ID, englishName: String): Category!
+        logout: Boolean
     }
 
     type RootMutation {
