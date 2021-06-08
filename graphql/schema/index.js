@@ -23,7 +23,7 @@ module.exports = buildSchema(`
         getUserData: UserWithId!
         category: [Category!]!
         getCategory(id: ID, englishName: String): Category!
-        getAnnoucements(addedBy: String, categoryId: String): [Annoucement!]!
+        getAnnoucements(addedBy: String, categoryId: String, search: String): [Annoucement!]!
         logout: Boolean
     }
 

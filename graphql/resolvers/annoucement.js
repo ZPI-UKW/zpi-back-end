@@ -64,9 +64,10 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   }
 };
 
-const getAnnoucements = async ({ addedBy, categoryId }) => {
+const getAnnoucements = async ({ addedBy, categoryId, search }) => {
   try {
-    if (!addedBy && !categoryId) throw new CustomError('Specify addedBy or categoryId');
+    if (!addedBy && !categoryId && !search)
+      throw new CustomError('Specify addedBy, categoryId or search');
 
     console.log(addedBy);
     let annoucements;
@@ -80,7 +81,7 @@ const getAnnoucements = async ({ addedBy, categoryId }) => {
       if (!category) throw new CustomError('Invalid category', 401);
 
       annoucements = await Annoucement.find({ categoryId });
-    }
+    } else if (search) annoucements = await Annoucement.find({ title: new RegExp(search) });
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
 
