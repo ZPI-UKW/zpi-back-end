@@ -1,6 +1,6 @@
 const { createUser, login, getUserData, logout } = require('./auth');
 const { category, getCategory } = require('./category');
-const { annoucement, createAnnoucement } = require('./annoucement');
+const { annoucement, createAnnoucement, getAnnoucements } = require('./annoucement');
 const { changeUserData, changePassword } = require('./user');
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
   category,
   getCategory,
   annoucement,
+  getAnnoucements,
   createAnnoucement,
   changeUserData,
   changePassword,

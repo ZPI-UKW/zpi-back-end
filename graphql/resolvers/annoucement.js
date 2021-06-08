@@ -1,6 +1,7 @@
 const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
+const { CustomError } = require('../../util/error');
 
 const annoucement = async () => {
   try {
@@ -29,17 +30,17 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     }
 
     const user = await User.findById(req.userId);
-    if(!user) {
-        const error = new Error('Invalid user')
-        error.code = 401;
-        throw error; 
+    if (!user) {
+      const error = new Error('Invalid user');
+      error.code = 401;
+      throw error;
     }
 
-    const category = await Category.findById(annoucementInput.category)
-    if(!category) {
-        const error = new Error('Invalid category')
-        error.code = 401;
-        throw error; 
+    const category = await Category.findById(annoucementInput.category);
+    if (!category) {
+      const error = new Error('Invalid category');
+      error.code = 401;
+      throw error;
     }
 
     const annoucement = new Annoucement({
@@ -51,19 +52,48 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
       images: annoucementInput.images,
       costs: annoucementInput.costs,
       categoryId: category,
-      addedBy: user
+      addedBy: user,
     });
     const createAnnoucement = await annoucement.save();
-    return { 
-      ...createAnnoucement._doc, 
-      id: createAnnoucement._id.toString()
+    return {
+      ...createAnnoucement._doc,
+      id: createAnnoucement._id.toString(),
     };
   } catch (e) {
     throw new Error(e.message || 'Unknown error occured');
   }
-}
+};
+
+const getAnnoucements = async ({ addedBy, categoryId }) => {
+  try {
+    if (!addedBy && !categoryId) throw new CustomError('Specify addedBy or categoryId');
+
+    console.log(addedBy);
+    let annoucements;
+    if (addedBy) {
+      const user = await User.findById(addedBy);
+      if (!user) throw new CustomError('Invalid user', 401);
+
+      annoucements = await Annoucement.find({ addedBy });
+    } else if (categoryId) {
+      const category = await Category.findById(categoryId);
+      if (!category) throw new CustomError('Invalid category', 401);
+
+      annoucements = await Annoucement.find({ categoryId });
+    }
+
+    if (!annoucements) throw new CustomError('Annoucement not found', 404);
+
+    const mappedAnn = annoucements.map((el) => ({ ...el._doc, id: el._id.toString() }));
+
+    return mappedAnn;
+  } catch (e) {
+    throw e;
+  }
+};
 
 module.exports = {
   annoucement,
-  createAnnoucement
+  createAnnoucement,
+  getAnnoucements,
 };
