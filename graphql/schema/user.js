@@ -8,7 +8,8 @@ module.exports = {
         ${userData}
     }
     `,
-  UserWithId: `type UserWithId {
+  UserWithId: `
+    type UserWithId {
       _id: ID!
       ${userData}
     }`,
