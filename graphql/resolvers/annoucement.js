@@ -2,6 +2,7 @@ const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
+const e = require('express');
 
 const annoucement = async () => {
   try {
@@ -69,7 +70,6 @@ const getAnnoucements = async ({ addedBy, categoryId, search }) => {
     if (!addedBy && !categoryId && !search)
       throw new CustomError('Specify addedBy, categoryId or search');
 
-    console.log(addedBy);
     let annoucements;
     if (addedBy) {
       const user = await User.findById(addedBy);
@@ -93,8 +93,20 @@ const getAnnoucements = async ({ addedBy, categoryId, search }) => {
   }
 };
 
+const getAnnoucement = async ({ id }) => {
+  try {
+    const annoucement = await Annoucement.findById(id);
+    if (!annoucement) throw new CustomError('Annoucement not found', 404);
+
+    return annoucement;
+  } catch (e) {
+    throw e;
+  }
+};
+
 module.exports = {
   annoucement,
   createAnnoucement,
   getAnnoucements,
+  getAnnoucement,
 };
