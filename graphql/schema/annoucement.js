@@ -23,6 +23,7 @@ module.exports = {
     }
 
     input AnnoucementInputData {
+        id: ID!
         title: String!
         description: String!
         location: String!
