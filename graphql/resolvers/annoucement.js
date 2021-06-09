@@ -86,7 +86,10 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       const reservation = await Reservation.find({ reservedBy }).populate('annoucementId');
       if (!reservation) throw new CustomError('Reservation not found', 404);
 
-      annoucements = reservation.map((el) => ({ ...el._doc.annoucementId._doc }));
+      annoucements = reservation.map((el) => ({
+        ...el._doc.annoucementId._doc,
+        id: el._doc.annoucementId._id,
+      }));
     }
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
