@@ -9,6 +9,7 @@ module.exports = {
   Annoucement: `  
     type Annoucement {
       ${annoucementData}
+      categoryId: ID!
     }`,
 
   AnnoucementData: `
