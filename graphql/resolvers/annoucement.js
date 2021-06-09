@@ -2,6 +2,7 @@ const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
+const { clearImage } = require('../../util/file')
 
 const annoucement = async () => {
   try {
@@ -23,25 +24,13 @@ const annoucement = async () => {
 
 const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   try {
-    if (!isAuth && !userId) {
-      const error = new Error('Not authorized');
-      error.code = 401;
-      throw error;
-    }
+    if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
     const user = await User.findById(req.userId);
-    if (!user) {
-      const error = new Error('Invalid user');
-      error.code = 401;
-      throw error;
-    }
+    if (!user) throw new CustomError('user not found', 404);
 
     const category = await Category.findById(annoucementInput.category);
-    if (!category) {
-      const error = new Error('Invalid category');
-      error.code = 401;
-      throw error;
-    }
+    if (!category) throw new CustomError('category not found', 404);
 
     const annoucement = new Annoucement({
       title: annoucementInput.title,
@@ -66,26 +55,14 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
 
 const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   try {
-    // if (!isAuth && !userId) {
-    //   const error = new Error('Not authorized');
-    //   error.code = 401;
-    //   throw error;
-    // }
+    if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
-    testUserId = '609c46dc492a6c17dc923a47'
+    const user = await User.findById(userId);
+    if (!user) throw new CustomError('user not found', 404);
 
-    const user = await User.findById(testUserId);
-    if (!user) {
-      const error = new Error('Invalid user');
-      error.code = 401;
-      throw error;
-    }
-
-    const annoucement = await Annoucement.findById(annoucementInput.id).populate('addedBy')
+    const annoucement = await Annoucement.findById(annoucementInput.id)
     if(!annoucement) throw new CustomError('annoucement not found');
-    if(annoucement.addedBy._id.toString() !== user._id.toString()) throw new CustomError('you do not have permission');
-
-    console.log(annoucement)
+    if(annoucement.addedBy.toString() !== user._id.toString()) throw new CustomError('you do not have permission', 401);
 
     if(annoucementInput.title) annoucement.title = annoucementInput.title
     if(annoucementInput.description) annoucement.description = annoucementInput.description
@@ -93,7 +70,12 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     if(annoucementInput.phone) annoucement.phone = annoucementInput.phone
     if(annoucementInput.email) annoucement.email = annoucementInput.email
     if(annoucementInput.costs) annoucement.costs = annoucementInput.costs
-    if(annoucementInput.images && annoucement.images !== 'undefined') annoucement.images = annoucementInput.images
+    if(annoucementInput.images && annoucement.images !== 'undefined') {
+      annoucement.images.forEach(image => {
+        clearImage(image)
+      })
+      annoucement.images = annoucementInput.images
+    }
 
     const updatedAnnoucement = await annoucement.save();
     return {
