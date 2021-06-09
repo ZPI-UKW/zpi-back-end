@@ -34,7 +34,7 @@ module.exports = buildSchema(`
         category: [Category!]!
         getCategory(id: ID, englishName: String): Category!
         getAnnoucement(id: String!): SingleAnnoucement!
-        getAnnoucements(addedBy: String, categoryId: String, search: String): [Annoucement!]!
+        getAnnoucements(addedBy: String, categoryId: String, search: String, reservedBy: String): [Annoucement!]!
         logout: Boolean
     }
 
