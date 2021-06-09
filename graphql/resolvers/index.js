@@ -1,7 +1,7 @@
 const { createUser, login, getUserData, logout } = require('./auth');
 const { category, getCategory } = require('./category');
 const { createReservation } = require('./reservation');
-const { annoucement, createAnnoucement, getAnnoucements } = require('./annoucement');
+const { annoucement, createAnnoucement, editAnnoucement, getAnnoucements } = require('./annoucement');
 const { changeUserData, changePassword } = require('./user');
 
 module.exports = {
@@ -14,6 +14,7 @@ module.exports = {
   annoucement,
   getAnnoucements,
   createAnnoucement,
+  editAnnoucement,
   createReservation,
   changeUserData,
   changePassword,

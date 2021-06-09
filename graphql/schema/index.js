@@ -33,6 +33,7 @@ module.exports = buildSchema(`
     type RootMutation {
         createUser(userInput: UserInputData): User!
         createAnnoucement(annoucementInput: AnnoucementInputData): Annoucement!
+        editAnnoucement(annoucementInput: AnnoucementEditInput): Annoucement!
         createReservation(reservationInput: ReservationInputData): Reservation!
         changeUserData(userInput: UserInputWithId): UserWithId!
         changePassword(currentPassword: String!, newPassword: String!): Id!

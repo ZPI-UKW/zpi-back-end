@@ -66,38 +66,34 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
 
 const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   try {
-    if (!isAuth && !userId) {
-      const error = new Error('Not authorized');
-      error.code = 401;
-      throw error;
-    }
+    // if (!isAuth && !userId) {
+    //   const error = new Error('Not authorized');
+    //   error.code = 401;
+    //   throw error;
+    // }
 
-    const user = await User.findById(userId);
+    testUserId = '609c46dc492a6c17dc923a47'
+
+    const user = await User.findById(testUserId);
     if (!user) {
       const error = new Error('Invalid user');
       error.code = 401;
       throw error;
     }
 
-    const category = await Category.findById(annoucementInput.category);
-    if (!category) {
-      const error = new Error('Invalid category');
-      error.code = 401;
-      throw error;
-    }
-
-    const annoucement = await Annoucement.findById(annoucementId).populate('addedBy')
+    const annoucement = await Annoucement.findById(annoucementInput.id).populate('addedBy')
     if(!annoucement) throw new CustomError('annoucement not found');
-    if(annoucement.addedBy._id.toString() !== userId.toString()) throw new CustomError('you do not have permission');
+    if(annoucement.addedBy._id.toString() !== user._id.toString()) throw new CustomError('you do not have permission');
 
-    annoucement.title = annoucementInput.title
-    annoucement.description = annoucementInput.description
-    annoucement.location = annoucementInput.location
-    annoucement.phone = annoucementInput.phone
-    annoucement.email = annoucementInput.email
-    annoucement.costs = annoucementInput.costs
-    if(annoucementInput.images !== 'undefined') 
-      annoucement.images = annoucementInput.images
+    console.log(annoucement)
+
+    if(annoucementInput.title) annoucement.title = annoucementInput.title
+    if(annoucementInput.description) annoucement.description = annoucementInput.description
+    if(annoucementInput.location) annoucement.location = annoucementInput.location
+    if(annoucementInput.phone) annoucement.phone = annoucementInput.phone
+    if(annoucementInput.email) annoucement.email = annoucementInput.email
+    if(annoucementInput.costs) annoucement.costs = annoucementInput.costs
+    if(annoucementInput.images && annoucement.images !== 'undefined') annoucement.images = annoucementInput.images
 
     const updatedAnnoucement = await annoucement.save();
     return {
@@ -141,5 +137,6 @@ const getAnnoucements = async ({ addedBy, categoryId, search }) => {
 module.exports = {
   annoucement,
   createAnnoucement,
+  editAnnoucement,
   getAnnoucements,
 };
