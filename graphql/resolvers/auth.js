@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/user');
+const { CustomError } = require('../../util/error');
 
 //registration
 const createUser = async ({ userInput }) => {
@@ -77,6 +78,19 @@ const login = async ({ email, password }, { res }) => {
   };
 };
 
+//logout
+const logout = async (_, { isAuth, userId, res, cookies }) => {
+  try {
+    if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
+
+    res.cookie('jid', cookies.jid, { httpOnly: true, maxAge: 0 });
+
+    return true;
+  } catch (e) {
+    throw e;
+  }
+};
+
 //fetching user data when he is logged in
 const getUserData = async (_, { isAuth, userId }) => {
   if (!isAuth && !userId) {
@@ -105,4 +119,5 @@ module.exports = {
   createUser,
   login,
   getUserData,
+  logout,
 };

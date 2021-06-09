@@ -1,21 +1,20 @@
-const { AddedBy } = require('./user');
 const { annoucementData, costsData } = require('./util');
 
 module.exports = {
+  Costs: `
+    type Costs {
+      ${costsData}
+    }
+  `,
   Annoucement: `  
     type Annoucement {
       ${annoucementData}
     }`,
 
   AnnoucementData: `
-    type Costs {
-      ${costsData}
-    }
-
     type AnnoucementData {          
       ${annoucementData}
         category: Category
-        addedBy: UserWithId
     }`,
 
   AnnoucementInputData: `
@@ -32,7 +31,7 @@ module.exports = {
         images: [String]
         costs: costsInput!
         category: ID!
-    }`
+    }`,
 };
 
 // addedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
