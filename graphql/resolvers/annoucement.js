@@ -95,10 +95,14 @@ const getAnnoucements = async ({ addedBy, categoryId, search }) => {
 
 const getAnnoucement = async ({ id }) => {
   try {
-    const annoucement = await Annoucement.findById(id);
+    const annoucement = await Annoucement.findById(id).populate('categoryId').populate('addedBy');
     if (!annoucement) throw new CustomError('Annoucement not found', 404);
 
-    return annoucement;
+    return {
+      ...annoucement._doc,
+      id: annoucement._doc._id,
+      addedBy: { ...annoucement._doc.addedBy._doc, phonenumber: annoucement._doc.addedBy.phone },
+    };
   } catch (e) {
     throw e;
   }

@@ -2,7 +2,13 @@ const { buildSchema } = require('graphql');
 const { User, UserInputData, UserInputWithId, UserWithId } = require('./user');
 const { Category } = require('./category');
 const { Reservation, ReservationInputData } = require('./reservation');
-const { Costs, Annoucement, AnnoucementData, AnnoucementInputData } = require('./annoucement');
+const {
+  Costs,
+  Annoucement,
+  AnnoucementData,
+  AnnoucementInputData,
+  SingleAnnoucement,
+} = require('./annoucement');
 
 module.exports = buildSchema(`
     ${User}
@@ -12,6 +18,7 @@ module.exports = buildSchema(`
     ${Category}
     ${Costs}
     ${Annoucement}
+    ${SingleAnnoucement}
     ${AnnoucementData}
     ${AnnoucementInputData}
     ${Reservation}
@@ -26,7 +33,7 @@ module.exports = buildSchema(`
         getUserData: UserWithId!
         category: [Category!]!
         getCategory(id: ID, englishName: String): Category!
-        getAnnoucement(id: String!): Annoucement!
+        getAnnoucement(id: String!): SingleAnnoucement!
         getAnnoucements(addedBy: String, categoryId: String, search: String): [Annoucement!]!
         logout: Boolean
     }
