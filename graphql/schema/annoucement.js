@@ -40,5 +40,16 @@ module.exports = {
         images: [String]
         costs: costsInput!
         category: ID!
+    }
+    
+    input AnnoucementEditInput {
+      id: ID!
+      title: String
+      description: String
+      location: String
+      phone: String
+      email: String
+      images: [String]
+      costs: costsInput
     }`,
 };
