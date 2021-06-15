@@ -9,6 +9,15 @@ module.exports = {
   Annoucement: `  
     type Annoucement {
       ${annoucementData}
+      categoryId: ID!
+      addedBy: ID!
+    }`,
+
+  SingleAnnoucement: `  
+    type SingleAnnoucement {
+      ${annoucementData}
+      categoryId: Category!
+      addedBy: UserWithId!
     }`,
 
   AnnoucementData: `
@@ -44,5 +53,3 @@ module.exports = {
       costs: costsInput
     }`,
 };
-
-// addedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
