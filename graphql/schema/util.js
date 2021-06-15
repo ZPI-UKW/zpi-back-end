@@ -31,5 +31,5 @@ module.exports = {
 
   reservationData: `
     id: ID!
-  `
+  `,
 };

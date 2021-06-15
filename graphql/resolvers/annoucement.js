@@ -2,6 +2,7 @@ const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
+const Reservation = require('../../models/reservation');
 
 const annoucement = async () => {
   try {
@@ -64,12 +65,11 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   }
 };
 
-const getAnnoucements = async ({ addedBy, categoryId, search }) => {
+const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
   try {
-    if (!addedBy && !categoryId && !search)
-      throw new CustomError('Specify addedBy, categoryId or search');
+    if (!addedBy && !categoryId && !search && !reservedBy)
+      throw new CustomError('Specify addedBy, categoryId, search or reservedBy.');
 
-    console.log(addedBy);
     let annoucements;
     if (addedBy) {
       const user = await User.findById(addedBy);
@@ -82,12 +82,40 @@ const getAnnoucements = async ({ addedBy, categoryId, search }) => {
 
       annoucements = await Annoucement.find({ categoryId });
     } else if (search) annoucements = await Annoucement.find({ title: new RegExp(search) });
+    else if (reservedBy) {
+      const reservation = await Reservation.find({ reservedBy }).populate('annoucementId');
+      if (!reservation) throw new CustomError('Reservation not found', 404);
+
+      annoucements = reservation.map((el) => ({
+        ...el._doc.annoucementId._doc,
+        id: el._doc.annoucementId._id,
+      }));
+    }
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
 
-    const mappedAnn = annoucements.map((el) => ({ ...el._doc, id: el._id.toString() }));
+    let mappedAnn;
+    if (!reservedBy) {
+      mappedAnn = annoucements.map((el) => ({ ...el._doc, id: el._id.toString() }));
+      return mappedAnn;
+    }
 
-    return mappedAnn;
+    return annoucements;
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getAnnoucement = async ({ id }) => {
+  try {
+    const annoucement = await Annoucement.findById(id).populate('categoryId').populate('addedBy');
+    if (!annoucement) throw new CustomError('Annoucement not found', 404);
+
+    return {
+      ...annoucement._doc,
+      id: annoucement._doc._id,
+      addedBy: { ...annoucement._doc.addedBy._doc, phonenumber: annoucement._doc.addedBy.phone },
+    };
   } catch (e) {
     throw e;
   }
@@ -97,4 +125,5 @@ module.exports = {
   annoucement,
   createAnnoucement,
   getAnnoucements,
+  getAnnoucement,
 };

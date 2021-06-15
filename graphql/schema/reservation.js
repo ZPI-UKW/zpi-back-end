@@ -1,5 +1,4 @@
 const { reservationData } = require('./util');
-const { UserWithId } = require('./user');
 
 module.exports = {
   Reservation: `
@@ -13,5 +12,5 @@ module.exports = {
         endAt: String!
         annoucementId: ID!
     }
-  `
+  `,
 };
