@@ -1,10 +1,11 @@
 require('dotenv').config();
 const path = require('path');
+const fs = require('fs');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const multer = require('multer')
+const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
 
 const graphqlSchema = require('./graphql/schema');
@@ -17,12 +18,17 @@ const app = express();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images');
+    fs.mkdir('./images/', (err) => {
+      cb(null, './images/');
+    });
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/[-:.]/g,'') + '-' + file.originalname);
-  }
+    cb(null, new Date().toISOString().replace(/[-:.]/g, '') + '-' + file.originalname);
+  },
 });
+
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cookieParser());
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -36,35 +42,29 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array('images', 3)
-);
-
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(cookieParser());
-
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).array('images', 3));
 
 app.use(auth);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.put('/add-images', (req, res, next) => {
-  if(!req.isAuth){
-    throw new Error('not authenticated')
+  if (!req.isAuth) {
+    throw new Error('not authenticated');
   }
 
-  if(req.files.length <= 0) {
-    return res.status(200).json({message: 'no files provided'})
+  if (req.files.length <= 0) {
+    return next();
   }
 
-  const filesPath = req.files.map(file => {
-    return file.path
-  })
+  const filesPath = req.files.map((file) => {
+    return file.path;
+  });
 
   return res.status(201).json({
     message: 'file uploaded',
-    files: filesPath
-  })
-})
+    files: filesPath,
+  });
+});
 
 app.use(
   '/graphql',

@@ -2,7 +2,7 @@ const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
-const { clearImage } = require('../../util/file')
+const { clearImage } = require('../../util/file');
 const Reservation = require('../../models/reservation');
 
 const annoucement = async () => {
@@ -25,9 +25,10 @@ const annoucement = async () => {
 
 const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   try {
+    console.log('Test: ', annoucementInput);
     if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
-    const user = await User.findById(req.userId);
+    const user = await User.findById(userId);
     if (!user) throw new CustomError('user not found', 404);
 
     const category = await Category.findById(annoucementInput.category);
@@ -42,7 +43,7 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
       images: annoucementInput.images,
       costs: annoucementInput.costs,
       categoryId: category,
-      addedBy: user,
+      addedBy: userId,
     });
     const createAnnoucement = await annoucement.save();
     return {
@@ -61,21 +62,22 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     const user = await User.findById(userId);
     if (!user) throw new CustomError('user not found', 404);
 
-    const annoucement = await Annoucement.findById(annoucementInput.id)
-    if(!annoucement) throw new CustomError('annoucement not found');
-    if(annoucement.addedBy.toString() !== user._id.toString()) throw new CustomError('you do not have permission', 401);
+    const annoucement = await Annoucement.findById(annoucementInput.id);
+    if (!annoucement) throw new CustomError('annoucement not found');
+    if (annoucement.addedBy.toString() !== user._id.toString())
+      throw new CustomError('you do not have permission', 401);
 
-    if(annoucementInput.title) annoucement.title = annoucementInput.title
-    if(annoucementInput.description) annoucement.description = annoucementInput.description
-    if(annoucementInput.location) annoucement.location = annoucementInput.location
-    if(annoucementInput.phone) annoucement.phone = annoucementInput.phone
-    if(annoucementInput.email) annoucement.email = annoucementInput.email
-    if(annoucementInput.costs) annoucement.costs = annoucementInput.costs
-    if(annoucementInput.images && annoucement.images !== 'undefined') {
-      annoucement.images.forEach(image => {
-        clearImage(image)
-      })
-      annoucement.images = annoucementInput.images
+    if (annoucementInput.title) annoucement.title = annoucementInput.title;
+    if (annoucementInput.description) annoucement.description = annoucementInput.description;
+    if (annoucementInput.location) annoucement.location = annoucementInput.location;
+    if (annoucementInput.phone) annoucement.phone = annoucementInput.phone;
+    if (annoucementInput.email) annoucement.email = annoucementInput.email;
+    if (annoucementInput.costs) annoucement.costs = annoucementInput.costs;
+    if (annoucementInput.images && annoucement.images !== 'undefined') {
+      annoucement.images.forEach((image) => {
+        clearImage(image);
+      });
+      annoucement.images = annoucementInput.images;
     }
 
     const updatedAnnoucement = await annoucement.save();
