@@ -17,18 +17,11 @@ const createUser = async ({ userInput }) => {
     errors.push({ message: 'Password too short' });
   }
 
-  if (errors.length > 0) {
-    const error = new Error('Invalid input');
-    error.data = errors;
-    error.code = 422;
-    throw error;
-  }
+  if (errors.length > 0) throw new CustomError('invalid inputs', 400);
 
   const existingUser = await User.findOne({ email: userInput.email });
-  if (existingUser) {
-    const error = new Error('user exists');
-    throw error;
-  }
+  if (existingUser) throw new CustomError('user exists', 422);
+
   const password = await bcrypt.hash(userInput.password, 12);
   const user = new User({
     email: userInput.email,
@@ -44,17 +37,9 @@ const createUser = async ({ userInput }) => {
 //login
 const login = async ({ email, password }, { res }) => {
   const user = await User.findOne({ email: email });
-  if (!user) {
-    const error = new Error('User not found');
-    error.code = 401;
-    throw error;
-  }
+  if (!user) throw new CustomError('User not found', 401);
   const isEqual = await bcrypt.compare(password, user.password);
-  if (!isEqual) {
-    const error = new Error('Password mismatch');
-    error.code = 401;
-    throw error;
-  }
+  if (!isEqual) throw new CustomError('User not found', 401);
 
   const token = jwt.sign(
     {
