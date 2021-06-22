@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "start:local": "nodemon app.js",
-    "start:docker": "docker run -p 9900:8080 -d --name zpi-back-end zpi-back-end",
+    "start:docker": "docker run -p 8080:8080 -d --name zpi-back-end zpi-back-end",
     "build:docker": "docker build -t zpi-back-end ."
   },
   "repository": {
