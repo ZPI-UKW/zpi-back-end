@@ -90,6 +90,34 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
   }
 };
 
+const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
+  try {
+    if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
+
+    const user = await User.findById(userId);
+    if (!user) throw new CustomError('user not found', 404);
+
+    const annoucement = await Annoucement.findById(annoucementId);
+    if (!annoucement) throw new CustomError('annoucement not found');
+    if (annoucement.addedBy.toString() !== user._id.toString())
+      throw new CustomError('you do not have permission to perform this action', 401);
+
+    annoucement.images.forEach((image) => {
+      clearImage(image);
+    });
+
+    await Reservation.deleteMany({
+      annoucementId: annoucement
+    })
+
+    Annoucement.deleteOne(annoucement)
+
+    return 'annoucement deleted sucessfully'
+  } catch (e) {
+    throw new Error(e.message || 'Unknown error occured');
+  }
+};
+
 const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
   try {
     if (!addedBy && !categoryId && !search && !reservedBy)
@@ -150,6 +178,7 @@ module.exports = {
   annoucement,
   createAnnoucement,
   editAnnoucement,
+  deleteAnnoucement,
   getAnnoucements,
   getAnnoucement,
 };
