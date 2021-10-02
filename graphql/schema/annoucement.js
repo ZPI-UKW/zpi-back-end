@@ -11,6 +11,7 @@ module.exports = {
       ${annoucementData}
       categoryId: ID!
       addedBy: ID!
+      status: String!
     }`,
 
   SingleAnnoucement: `  
