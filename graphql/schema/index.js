@@ -45,6 +45,7 @@ module.exports = buildSchema(`
         createReservation(reservationInput: ReservationInputData): Reservation!
         changeUserData(userInput: UserInputWithId): UserWithId!
         changePassword(currentPassword: String!, newPassword: String!): Id!
+        deleteAnnoucement(annoucementId: ID!): String!
         cancelReservation(reservationId: ID!): String!
     }
     
