@@ -98,7 +98,7 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
     if (!user) throw new CustomError('user not found', 404);
 
     const annoucement = await Annoucement.findById(annoucementId);
-    if (!annoucement) throw new CustomError('annoucement not found');
+    if (!annoucement) throw new CustomError('annoucement not found', 404);
     if (annoucement.addedBy.toString() !== user._id.toString())
       throw new CustomError('you do not have permission to perform this action', 401);
 
