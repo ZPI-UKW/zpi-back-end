@@ -46,6 +46,7 @@ module.exports = buildSchema(`
         changeUserData(userInput: UserInputWithId): UserWithId!
         changePassword(currentPassword: String!, newPassword: String!): Id!
         deleteAnnoucement(annoucementId: ID!): String!
+        cancelReservation(reservationId: ID!): String!
     }
     
     schema {

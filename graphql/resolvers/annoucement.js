@@ -128,7 +128,26 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       const user = await User.findById(addedBy);
       if (!user) throw new CustomError('Invalid user', 401);
 
-      annoucements = await Annoucement.find({ addedBy });
+      const findedAnnoucements = await Annoucement.find({ addedBy });
+      const mapAnnoucements = await Promise.all(findedAnnoucements.map(async (ann) => {
+        const now = Date.now();
+        const reservations = await Reservation.find({
+          annoucementId: ann, 
+          status: 'reserved'
+        })
+        let status = 'free'
+        reservations.forEach(res => {
+          if(res.startAt <= now && res.endAt >= now) status = 'not free' 
+        })
+        return {
+          _id: ann._id,
+          _doc: {
+            ...ann._doc,
+            status
+          }
+        }
+      }))
+      annoucements = mapAnnoucements
     } else if (categoryId) {
       const category = await Category.findById(categoryId);
       if (!category) throw new CustomError('Invalid category', 401);
@@ -146,13 +165,11 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
     }
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
-
     let mappedAnn;
     if (!reservedBy) {
       mappedAnn = annoucements.map((el) => ({ ...el._doc, id: el._id.toString() }));
       return mappedAnn;
     }
-
     return annoucements;
   } catch (e) {
     throw e;
