@@ -79,28 +79,28 @@ const cancelReservation = async ({reservationId}, { isAuth, userId }) => {
       error.code = 401;
       throw error;
     }
-
+    
     const user = await User.findById(userId);
     if (!user) {
       const error = new Error('Invalid user');
       error.code = 401;
       throw error;
     }
-
+    
     const reservation = await Reservation.findById(reservationId);
     if (!reservation) {
       const error = new Error('Invalid reservation id');
       error.code = 401;
       throw error;
     }
-
-    if(reservation.reservedBy != user) {
+    
+    if(reservation.reservedBy.toString() !== user._id.toString()) {
       const error = new Error('You do not have permission to do this action');
       error.code = 401;
       throw error;
     }
 
-    Reservation.deleteOne(reservation)
+    Reservation.findById(reservationId).remove().exec();
     return 'Reservation canceled successfully'
   } catch (e) {
     throw e;

@@ -107,10 +107,10 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
     });
 
     await Reservation.deleteMany({
-      annoucementId: annoucement
+      annoucementId: annoucement._id
     })
 
-    Annoucement.deleteOne(annoucement)
+    Annoucement.findById(annoucement._id).remove().exec();
 
     return 'annoucement deleted sucessfully'
   } catch (e) {
@@ -161,8 +161,11 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       annoucements = reservation.map((el) => ({
         ...el._doc.annoucementId._doc,
         id: el._doc.annoucementId._id,
+        reservationId: el._id,
       }));
     }
+
+    
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
     let mappedAnn;

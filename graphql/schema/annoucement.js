@@ -11,7 +11,8 @@ module.exports = {
       ${annoucementData}
       categoryId: ID!
       addedBy: ID!
-      status: String!
+      status: String
+      reservationId: ID
     }`,
 
   SingleAnnoucement: `  
