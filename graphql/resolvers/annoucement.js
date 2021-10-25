@@ -23,9 +23,9 @@ const annoucement = async () => {
   }
 };
 
-const createAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
+const createAnnoucement = async ({ annoucementInput }, { isAuth, userId, files }) => {
   try {
-    console.log('Test: ', annoucementInput);
+    // console.log('Test: ', annoucementInput);
     if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
     const user = await User.findById(userId);

@@ -18,16 +18,14 @@ const app = express();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    fs.mkdir('./images/', (err) => {
-      cb(null, './images/');
-    });
+    cb(null, 'images')
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString().replace(/[-:.]/g, '') + '-' + file.originalname);
   },
 });
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND, credentials: true }));
 app.use(cookieParser());
 
 const fileFilter = (req, file, cb) => {
@@ -103,6 +101,6 @@ mongoose
     useCreateIndex: true,
   })
   .then(() => {
-    app.listen(8080);
+    app.listen(process.env.PORT || 8080);
   })
   .catch((err) => console.log(err));
