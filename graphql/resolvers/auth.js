@@ -52,7 +52,7 @@ const login = async ({ email, password }, { res }) => {
     },
   );
 
-  res.cookie('jid', token, { httpOnly: true, domain: "vercel.app",  sameSite: 'none' });
+  res.cookie('jid', token, { httpOnly: true, sameSite: 'none', secure: true });
 
   return {
     _id: user._id.toString(),
