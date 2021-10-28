@@ -72,6 +72,174 @@ const createReservation = async ({ reservationInput }, { isAuth, userId }) => {
   }
 };
 
+const releaseDamage = async ({damageInput}, { isAuth, userId }) => {
+  try {
+    if (!isAuth && !userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      const error = new Error('Invalid user');
+      error.code = 401;
+      throw error;
+    }
+    
+    const reservation = await Reservation.findById(damageInput.reservationId);
+    if (!reservation) {
+      const error = new Error('Invalid reservation id');
+      error.code = 401;
+      throw error;
+    }
+
+    const annoucement = await Annoucement.findById(reservation.annoucementId);
+    if (!annoucement) {
+      const error = new Error('Invalid annoucement id');
+      error.code = 401;
+      throw error;
+    }
+    
+    if(annoucement.addedBy.toString() !== user._id.toString()) {
+      const error = new Error('You do not have permission to do this action');
+      error.code = 401;
+      throw error;
+    }
+
+    reservation.releaseDamage.list = damageInput.list
+    reservation.releaseDamage.approved = false
+    reservation.status = 'waiting for release damage approve'
+    const updatedReservation = await reservation.save()
+
+    return 'Reservation release damage successfully updated'
+  } catch (e) {
+    throw e;
+  }
+}
+
+const acceptReleaseDamage = async ({reservationId}, { isAuth, userId }) => {
+  try {
+    if (!isAuth && !userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      const error = new Error('Invalid user');
+      error.code = 401;
+      throw error;
+    }
+    
+    const reservation = await Reservation.findById(reservationId);
+    if (!reservation) {
+      const error = new Error('Invalid reservation id');
+      error.code = 401;
+      throw error;
+    }
+    
+    if(reservation.reservedBy.toString() !== user._id.toString()) {
+      const error = new Error('You do not have permission to do this action');
+      error.code = 401;
+      throw error;
+    }
+
+    reservations.releaseDamage.approved = true
+    reservation.status = 'on loan'
+    const updatedReservation = await reservation.save()
+
+    return 'Reservation release damage successfully approved'
+  } catch (e) {
+    throw e;
+  }
+}
+
+const returnDamage = async ({damageInput}, { isAuth, userId }) => {
+  try {
+    if (!isAuth && !userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      const error = new Error('Invalid user');
+      error.code = 401;
+      throw error;
+    }
+    
+    const reservation = await Reservation.findById(damageInput.reservationId);
+    if (!reservation) {
+      const error = new Error('Invalid reservation id');
+      error.code = 401;
+      throw error;
+    }
+
+    const annoucement = await Annoucement.findById(reservation.annoucementId);
+    if (!annoucement) {
+      const error = new Error('Invalid annoucement id');
+      error.code = 401;
+      throw error;
+    }
+    
+    if(annoucement.addedBy.toString() !== user._id.toString()) {
+      const error = new Error('You do not have permission to do this action');
+      error.code = 401;
+      throw error;
+    }
+
+    reservation.returnDamage.list = damageInput.list
+    reservation.returnDamage.approved = false
+    reservation.status = 'waiting for return damage approve'
+    const updatedReservation = await reservation.save()
+
+    return 'Reservation release damage successfully updated'
+  } catch (e) {
+    throw e;
+  }
+}
+
+const acceptReturnDamage = async ({reservationId}, { isAuth, userId }) => {
+  try {
+    if (!isAuth && !userId) {
+      const error = new Error('Not authorized');
+      error.code = 401;
+      throw error;
+    }
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      const error = new Error('Invalid user');
+      error.code = 401;
+      throw error;
+    }
+    
+    const reservation = await Reservation.findById(reservationId);
+    if (!reservation) {
+      const error = new Error('Invalid reservation id');
+      error.code = 401;
+      throw error;
+    }
+    
+    if(reservation.reservedBy.toString() !== user._id.toString()) {
+      const error = new Error('You do not have permission to do this action');
+      error.code = 401;
+      throw error;
+    }
+
+    reservations.returnDamage.approved = true
+    reservation.status = 'finished'
+    const updatedReservation = await reservation.save()
+
+    return 'Reservation release damage successfully approved'
+  } catch (e) {
+    throw e;
+  }
+}
+
 const cancelReservation = async ({reservationId}, { isAuth, userId }) => {
   try {
     if (!isAuth && !userId) {
