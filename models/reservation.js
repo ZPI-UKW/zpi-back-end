@@ -7,7 +7,15 @@ const reservationSchema = new Schema({
     reservedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     annoucementId: { type: Schema.Types.ObjectId, ref: 'Annoucement', required: true },
     totalCost: { type: Number, required: true },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
+    releaseDamage: [{
+        name: { type: String, required: true },
+        approved: { type: Boolean, required: true },
+    }],
+    returnDamage: [{
+        name: { type: String, required: true },
+        approved: { type: Boolean, required: true }
+    }]
 });
 
 module.exports = mongoose.model('Reservation', reservationSchema);
