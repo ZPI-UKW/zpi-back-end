@@ -25,7 +25,6 @@ const annoucement = async () => {
 
 const createAnnoucement = async ({ annoucementInput }, { isAuth, userId, files }) => {
   try {
-    // console.log('Test: ', annoucementInput);
     if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
     const user = await User.findById(userId);
@@ -162,6 +161,7 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
         ...el._doc.annoucementId._doc,
         id: el._doc.annoucementId._id,
         reservationId: el._id,
+        startAt: el.startAt.toString()
       }));
     }
 

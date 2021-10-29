@@ -87,7 +87,7 @@ app.use(
 );
 
 app.use((error, req, res, next) => {
-  console.log(error);
+  console.error(error);
   const status = error.statusCode || 500;
   const message = error.message;
   const data = error.data;
@@ -103,4 +103,4 @@ mongoose
   .then(() => {
     app.listen(process.env.PORT || 8080);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));

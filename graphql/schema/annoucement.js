@@ -13,6 +13,7 @@ module.exports = {
       addedBy: ID!
       status: String
       reservationId: ID
+      startAt: String
     }`,
 
   SingleAnnoucement: `  
