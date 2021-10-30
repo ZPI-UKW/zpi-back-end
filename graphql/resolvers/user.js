@@ -28,7 +28,7 @@ const changeUserData = async (
 
     user.name = name;
     user.lastname = lastname;
-    user.phonenumber = phonenumber;
+    user.phone = phonenumber;
 
     const updatedUser = await user.save();
 
