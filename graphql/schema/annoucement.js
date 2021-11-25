@@ -41,6 +41,7 @@ module.exports = {
         phone: String!
         email: String!
         images: [String]
+        condition: String!
         costs: costsInput!
         category: ID!
     }
@@ -53,6 +54,7 @@ module.exports = {
       phone: String
       email: String
       images: [String]
+      condition: String!
       costs: costsInput
     }`,
 };

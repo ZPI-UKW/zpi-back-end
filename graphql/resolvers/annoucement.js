@@ -41,6 +41,7 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId, files }
       email: annoucementInput.email,
       images: annoucementInput.images,
       costs: annoucementInput.costs,
+      condition: annoucementInput.condition,
       categoryId: category,
       addedBy: userId,
     });
@@ -72,6 +73,7 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     if (annoucementInput.phone) annoucement.phone = annoucementInput.phone;
     if (annoucementInput.email) annoucement.email = annoucementInput.email;
     if (annoucementInput.costs) annoucement.costs = annoucementInput.costs;
+    if (annoucementInput.condition) annoucement.condition = annoucementInput.condition;
     if (annoucementInput.images && annoucement.images !== 'undefined') {
       annoucement.images.forEach((image) => {
         clearImage(image);
