@@ -12,7 +12,8 @@ const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const {CONFIG} = require("./config/config");
+const { CONFIG } = require("./config/config");
+const { BUCKET } = require("./config/storage");
 
 const app = express();
 
@@ -21,12 +22,7 @@ app.use(cookieParser());
 app.use(fileMiddleware);
 app.use(auth);
 
-const storage = new Storage({
-    projectId: CONFIG.PROJECT_ID,
-    keyFilename: CONFIG.KEY_FILENAME
-});
-
-const bucket = storage.bucket(CONFIG.BUCKET_URL);
+const bucket = BUCKET();
 
 app.post('/add-images', (req, res) => {
     let files = req.files;

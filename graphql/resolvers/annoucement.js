@@ -1,9 +1,13 @@
+const path = require('path');
 const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
-const { clearImage } = require('../../util/file');
 const Reservation = require('../../models/reservation');
+const { BUCKET, STORAGE} = require("../../config/storage");
+const { CONFIG } = require("../../config/config");
+const { getFilename } = require("../../helpers/getFileName");
+const { removeImages } = require("../../helpers/removeImage");
 
 const annoucement = async () => {
   try {
@@ -75,9 +79,7 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     if (annoucementInput.costs) annoucement.costs = annoucementInput.costs;
     if (annoucementInput.condition) annoucement.condition = annoucementInput.condition;
     if (annoucementInput.images && annoucement.images !== 'undefined') {
-      annoucement.images.forEach((image) => {
-        clearImage(image);
-      });
+      await removeImages(annoucement.images || []);
       annoucement.images = annoucementInput.images;
     }
 
@@ -103,11 +105,8 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
     if (annoucement.addedBy.toString() !== user._id.toString())
       throw new CustomError('you do not have permission to perform this action', 401);
 
-    annoucement.images.forEach((image) => {
-      clearImage(image);
-    });
+    await removeImages(annoucement.images || []);
 
-    return 'annoucement deleted sucessfully'
     await Reservation.deleteMany({
       annoucementId: annoucement._id
     })
@@ -116,7 +115,8 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
 
     return 'annoucement deleted sucessfully'
   } catch (e) {
-    throw new Error(e.message || 'Unknown error occured');
+    // throw new Error(e.message || 'Unknown error occured');
+    console.log(e.errors);
   }
 };
 
