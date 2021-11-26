@@ -3,5 +3,7 @@ const { STORAGE } = require("../config/storage");
 const { CONFIG } = require("../config/config");
 
 module.exports.removeImages = async (images) => {
-    await Promise.all([...images.map(image => STORAGE.bucket(CONFIG.BUCKET_URL).file(getFilename(image)).delete())]);
+    try {
+        await Promise.all([...images.map(image => STORAGE.bucket(CONFIG.BUCKET_URL).file(getFilename(image)).delete())]);
+    } catch (e) {}
 }

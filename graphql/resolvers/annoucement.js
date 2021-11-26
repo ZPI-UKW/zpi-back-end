@@ -78,6 +78,7 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     if (annoucementInput.email) annoucement.email = annoucementInput.email;
     if (annoucementInput.costs) annoucement.costs = annoucementInput.costs;
     if (annoucementInput.condition) annoucement.condition = annoucementInput.condition;
+    console.log(123123123123)
     if (annoucementInput.images && annoucement.images !== 'undefined') {
       await removeImages(annoucement.images || []);
       annoucement.images = annoucementInput.images;
