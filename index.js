@@ -12,24 +12,21 @@ const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const {CONFIG} = require("./config/config");
 
 const app = express();
 
-app.use(cors({origin: process.env.FRONTEND, credentials: true}));
+app.use(cors({origin: CONFIG.FRONTEND_URL, credentials: true}));
 app.use(cookieParser());
 app.use(fileMiddleware);
 app.use(auth);
 
-const projectId = "zpi-files";
-const keyFilename = "./config/zpi-files-firebase-adminsdk.json";
-const bucketUrl = "gs://zpi-files.appspot.com";
-
 const storage = new Storage({
-    projectId,
-    keyFilename
+    projectId: CONFIG.PROJECT_ID,
+    keyFilename: CONFIG.KEY_FILENAME
 });
 
-const bucket = storage.bucket(bucketUrl);
+const bucket = storage.bucket(CONFIG.BUCKET_URL);
 
 app.post('/add-images', (req, res) => {
     let files = req.files;
@@ -105,12 +102,12 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-    .connect(process.env.DB_CONNECT, {
+    .connect(CONFIG.DB_CONNECT, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
     })
     .then(() => {
-        app.listen(process.env.PORT || 8080);
+        app.listen(CONFIG.PORT || 8080);
     })
     .catch((err) => console.error(err));

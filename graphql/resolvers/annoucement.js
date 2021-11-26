@@ -107,6 +107,7 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
       clearImage(image);
     });
 
+    return 'annoucement deleted sucessfully'
     await Reservation.deleteMany({
       annoucementId: annoucement._id
     })
