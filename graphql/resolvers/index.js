@@ -1,7 +1,7 @@
 const { createUser, login, getUserData, logout } = require('./auth');
 const { category, getCategory } = require('./category');
 const { createReservation, cancelReservation } = require('./reservation');
-const { annoucement, createAnnoucement, getAnnoucement, editAnnoucement, getAnnoucements, deleteAnnoucement } = require('./annoucement');
+const { annoucement, createAnnoucement, getAnnoucement, editAnnoucement, getAnnoucements, deleteAnnoucement, getUserReservedAnnoucements } = require('./annoucement');
 const { changeUserData, changePassword } = require('./user');
 
 module.exports = {
@@ -20,5 +20,6 @@ module.exports = {
   changeUserData,
   changePassword,
   cancelReservation,
-  deleteAnnoucement
+  deleteAnnoucement,
+  getUserReservedAnnoucements
 };

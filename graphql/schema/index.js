@@ -1,7 +1,7 @@
 const { buildSchema } = require('graphql');
 const { User, UserInputData, UserInputWithId, UserWithId } = require('./user');
 const { Category } = require('./category');
-const { Reservation, ReservationInputData } = require('./reservation');
+const { Reservation, ReservationInputData, UserAnnReservations} = require('./reservation');
 const {
   Costs,
   Annoucement,
@@ -23,6 +23,7 @@ module.exports = buildSchema(`
     ${AnnoucementInputData}
     ${Reservation}
     ${ReservationInputData}
+    ${UserAnnReservations}
 
     type Id {
         _id: ID!
@@ -36,6 +37,7 @@ module.exports = buildSchema(`
         getAnnoucement(id: String!): SingleAnnoucement!
         getAnnoucements(addedBy: String, categoryId: String, search: String, reservedBy: String): [Annoucement!]!
         logout: Boolean
+        getUserReservedAnnoucements: [UserAnnReservations!]!
     }
 
     type RootMutation {

@@ -168,8 +168,6 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       }));
     }
 
-    
-
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
     let mappedAnn;
     if (!reservedBy) {
@@ -177,6 +175,22 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       return mappedAnn;
     }
     return annoucements;
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getUserReservedAnnoucements = async (_, { isAuth, userId }) => {
+  if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
+  try {
+    const annoucements = await Annoucement.find({addedBy: userId});
+    if (!annoucements) throw new CustomError('Annoucements not found', 404);
+    const ids = annoucements.map(ann => ann._id);
+
+    const reservation = await Reservation.find({ annoucementId: { $in: ids} }).populate('annoucementId');
+    if (!reservation) throw new CustomError('Reservations not found', 404);
+
+    return reservation;
   } catch (e) {
     throw e;
   }
@@ -204,4 +218,5 @@ module.exports = {
   deleteAnnoucement,
   getAnnoucements,
   getAnnoucement,
+  getUserReservedAnnoucements,
 };
