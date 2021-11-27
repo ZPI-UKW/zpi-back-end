@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
-const { Storage } = require('@google-cloud/storage');
 const fileMiddleware = require('express-multipart-file-parser')
 
 const graphqlSchema = require('./graphql/schema');
@@ -14,11 +13,14 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { CONFIG } = require("./config/config");
 const { BUCKET } = require("./config/storage");
+const Reservation = require("./models/reservation");
 
 const app = express();
 
 app.use(cors({origin: CONFIG.FRONTEND_URL, credentials: true}));
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(fileMiddleware);
 app.use(auth);
 
@@ -27,7 +29,7 @@ const bucket = BUCKET();
 app.post('/add-images', (req, res) => {
     let files = req.files;
     if (files) {
-        Promise.all([...files.map(file => uploadImageToStorage(file))]).then((success) => {
+        Promise.all([...files.map(file => uploadFileToStorage(file))]).then((success) => {
             res.status(200).send({
                 status: 'File succesfully uploaded!',
                 files: success
@@ -38,7 +40,37 @@ app.post('/add-images', (req, res) => {
     }
 });
 
-const uploadImageToStorage = (file) => {
+app.post('/upload-pdf/:reservationId', auth, async (req, res) => {
+    const file = req.files[0];
+    const reservationId = req.params.reservationId;
+    if (!req.isAuth && !req.userId && !reservationId) {
+        const error = new Error('Not authorized');
+        error.code = 401;
+        throw error;
+    }
+
+    const reservation = await Reservation.findOne({ _id: reservationId });
+    if (!reservation) {
+        const error = new Error('Reservation not found');
+        error.code = 401;
+        throw error;
+    }
+
+    if (file) {
+        uploadFileToStorage(file).then((url) => {
+            reservation.agreement = url;
+            reservation.save();
+
+            res.status(200).send({
+                status: 'File succesfully uploaded!',
+            });
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+});
+
+const uploadFileToStorage = (file) => {
     return new Promise((resolve, reject) => {
         if (!file) {
             reject('No image file');

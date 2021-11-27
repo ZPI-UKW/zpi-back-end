@@ -7,6 +7,7 @@ const reservationSchema = new Schema({
     reservedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     annoucementId: { type: Schema.Types.ObjectId, ref: 'Annoucement', required: true },
     totalCost: { type: Number, required: true },
+    agreement: {type: String, default: null},
     status: { type: String, required: true }
 });
 
