@@ -164,7 +164,8 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
         ...el._doc.annoucementId._doc,
         id: el._doc.annoucementId._id,
         reservationId: el._id,
-        startAt: el.startAt.toString()
+        startAt: el.startAt.toString(),
+        endAt: el.endAt.toString(),
       }));
     }
 

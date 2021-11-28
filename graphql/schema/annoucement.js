@@ -14,6 +14,7 @@ module.exports = {
       status: String
       reservationId: ID
       startAt: String
+      endAt: String
     }`,
 
   SingleAnnoucement: `  

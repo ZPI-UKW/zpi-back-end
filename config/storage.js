@@ -7,7 +7,7 @@ module.exports.STORAGE = new Storage({
         type: CONFIG.TYPE,
         project_id: CONFIG.PROJECT_ID,
         private_key_id: CONFIG.PRIVATE_KEY_ID,
-        private_key: CONFIG.PRIVATE_KEY,
+        private_key: CONFIG.PRIVATE_KEY.replace(/\\n/gm, '\n'),
         client_email: CONFIG.CLIENT_EMAIL,
         client_id: CONFIG.CLIENT_ID,
         auth_uri: "https://accounts.google.com/o/oauth2/auth",
