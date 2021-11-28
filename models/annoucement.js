@@ -10,6 +10,7 @@ const annoucementSchema = new Schema(
     categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
+    condition: { type: String, required: true },
     costs: {
       day: { type: Number, required: true },
       week: { type: Number, required: true },

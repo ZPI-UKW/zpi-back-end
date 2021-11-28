@@ -21,6 +21,7 @@ module.exports = {
     email: String!
     images: [String!]!
     costs: Costs!
+    condition: String!
   `,
 
   costsData: `

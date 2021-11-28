@@ -1,2 +1,4 @@
 node_modules
 .env
+.idea/
+zpi-files-firebase.json

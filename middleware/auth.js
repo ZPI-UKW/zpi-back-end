@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { CONFIG } = require("../config/config");
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jid;
@@ -8,7 +9,7 @@ module.exports = (req, res, next) => {
   }
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    decodedToken = jwt.verify(token, CONFIG.JWT_SECRET);
   } catch (err) {
     err.statusCode = 500;
     req.isAuth = false;
