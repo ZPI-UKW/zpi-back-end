@@ -3,6 +3,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/user');
 const { CustomError } = require('../../util/error');
+const { CONFIG } = require("../../config/config");
 
 //registration
 const createUser = async ({ userInput }) => {
@@ -45,8 +46,7 @@ const login = async ({ email, password }, { res }) => {
     {
       userId: user._id.toString(),
       email: user.email,
-    },
-    process.env.JWT_SECRET,
+    }, CONFIG.JWT_SECRET,
     {
       expiresIn: '6h',
     },

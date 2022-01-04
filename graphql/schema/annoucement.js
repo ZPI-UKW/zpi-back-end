@@ -13,6 +13,8 @@ module.exports = {
       addedBy: ID!
       status: String
       reservationId: ID
+      startAt: String
+      endAt: String
     }`,
 
   SingleAnnoucement: `  
@@ -40,6 +42,7 @@ module.exports = {
         phone: String!
         email: String!
         images: [String]
+        condition: String!
         costs: costsInput!
         category: ID!
     }
@@ -52,6 +55,7 @@ module.exports = {
       phone: String
       email: String
       images: [String]
+      condition: String!
       costs: costsInput
     }`,
 };

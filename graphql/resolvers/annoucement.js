@@ -1,9 +1,13 @@
+const path = require('path');
 const Annoucement = require('../../models/annoucement');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const { CustomError } = require('../../util/error');
-const { clearImage } = require('../../util/file');
 const Reservation = require('../../models/reservation');
+const { BUCKET, STORAGE} = require("../../config/storage");
+const { CONFIG } = require("../../config/config");
+const { getFilename } = require("../../helpers/getFileName");
+const { removeImages } = require("../../helpers/removeImage");
 
 const annoucement = async () => {
   try {
@@ -25,7 +29,6 @@ const annoucement = async () => {
 
 const createAnnoucement = async ({ annoucementInput }, { isAuth, userId, files }) => {
   try {
-    // console.log('Test: ', annoucementInput);
     if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
 
     const user = await User.findById(userId);
@@ -42,6 +45,7 @@ const createAnnoucement = async ({ annoucementInput }, { isAuth, userId, files }
       email: annoucementInput.email,
       images: annoucementInput.images,
       costs: annoucementInput.costs,
+      condition: annoucementInput.condition,
       categoryId: category,
       addedBy: userId,
     });
@@ -73,10 +77,9 @@ const editAnnoucement = async ({ annoucementInput }, { isAuth, userId }) => {
     if (annoucementInput.phone) annoucement.phone = annoucementInput.phone;
     if (annoucementInput.email) annoucement.email = annoucementInput.email;
     if (annoucementInput.costs) annoucement.costs = annoucementInput.costs;
+    if (annoucementInput.condition) annoucement.condition = annoucementInput.condition;
     if (annoucementInput.images && annoucement.images !== 'undefined') {
-      annoucement.images.forEach((image) => {
-        clearImage(image);
-      });
+      await removeImages(annoucement.images || []);
       annoucement.images = annoucementInput.images;
     }
 
@@ -102,9 +105,7 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
     if (annoucement.addedBy.toString() !== user._id.toString())
       throw new CustomError('you do not have permission to perform this action', 401);
 
-    annoucement.images.forEach((image) => {
-      clearImage(image);
-    });
+    await removeImages(annoucement.images || []);
 
     await Reservation.deleteMany({
       annoucementId: annoucement._id
@@ -114,7 +115,8 @@ const deleteAnnoucement = async ({ annoucementId }, { isAuth, userId }) => {
 
     return 'annoucement deleted sucessfully'
   } catch (e) {
-    throw new Error(e.message || 'Unknown error occured');
+    // throw new Error(e.message || 'Unknown error occured');
+    console.log(e.errors);
   }
 };
 
@@ -162,10 +164,10 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
         ...el._doc.annoucementId._doc,
         id: el._doc.annoucementId._id,
         reservationId: el._id,
+        startAt: el.startAt.toString(),
+        endAt: el.endAt.toString(),
       }));
     }
-
-    
 
     if (!annoucements) throw new CustomError('Annoucement not found', 404);
     let mappedAnn;
@@ -174,6 +176,22 @@ const getAnnoucements = async ({ addedBy, categoryId, search, reservedBy }) => {
       return mappedAnn;
     }
     return annoucements;
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getUserReservedAnnoucements = async (_, { isAuth, userId }) => {
+  if (!isAuth && !userId) throw new CustomError('Not authorized', 401);
+  try {
+    const annoucements = await Annoucement.find({addedBy: userId});
+    if (!annoucements) throw new CustomError('Annoucements not found', 404);
+    const ids = annoucements.map(ann => ann._id);
+
+    const reservation = await Reservation.find({ annoucementId: { $in: ids} }).populate('annoucementId');
+    if (!reservation) throw new CustomError('Reservations not found', 404);
+
+    return reservation;
   } catch (e) {
     throw e;
   }
@@ -201,4 +219,5 @@ module.exports = {
   deleteAnnoucement,
   getAnnoucements,
   getAnnoucement,
+  getUserReservedAnnoucements,
 };

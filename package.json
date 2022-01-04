@@ -2,13 +2,13 @@
   "name": "zpi-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "engines": {
     "node": "14.x"
   },
   "scripts": {
-    "start": "node app.js",
-    "start:local": "nodemon app.js",
+    "start": "node index.js",
+    "start:local": "nodemon index.js",
     "start:docker": "docker run -p 8080:8080 -d --name zpi-back-end zpi-back-end",
     "build:docker": "docker build -t zpi-back-end ."
   },
@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^5.16.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.5",
@@ -26,6 +27,7 @@
     "dotenv": "^9.0.2",
     "express": "^4.16.3",
     "express-graphql": "^0.12.0",
+    "express-multipart-file-parser": "^0.1.2",
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.21",

@@ -13,4 +13,14 @@ module.exports = {
         annoucementId: ID!
     }
   `,
+
+  UserAnnReservations: `
+    type UserAnnReservations {
+      id: String!,
+      agreement: String,
+      startAt: String!
+      endAt: String!
+      annoucementId: Annoucement,
+      status: String!
+    }`,
 };
